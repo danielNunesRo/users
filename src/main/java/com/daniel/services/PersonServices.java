@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.daniel.controllers.PersonController;
 import com.daniel.data.vo.v1.PersonVO;
+import com.daniel.exceptions.RequiredObjectIsNullException;
 import com.daniel.exceptions.ResourceNotFoundException;
 import com.daniel.mapper.DozerMapper;
 import com.daniel.mapper.custom.PersonMapper;
@@ -39,6 +40,7 @@ public class PersonServices {
 	}
 	
 	public PersonVO create(PersonVO person) {
+		if(person == null) throw new RequiredObjectIsNullException();
 		var entity = DozerMapper.parseObject(person, Person.class);
 		var vo = DozerMapper.parseObject(repository.save(entity), PersonVO.class);
 		vo.add(linkTo(methodOn(PersonController.class).findById(vo.getKey())).withSelfRel());
@@ -46,6 +48,7 @@ public class PersonServices {
 	}
 	
 	public PersonVO update(PersonVO person) {
+		if (person == null) throw new RequiredObjectIsNullException();
 		var entity = repository.findById(person.getKey()).orElseThrow(() -> new ResourceNotFoundException("No records found for this ID"));
 		entity.setFirstName(person.getFirstName());
 		entity.setLastName(person.getLastName());
