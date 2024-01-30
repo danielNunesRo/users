@@ -17,14 +17,23 @@ import org.springframework.web.bind.annotation.RestController;
 import com.daniel.data.vo.v1.PersonVO;
 import com.daniel.services.PersonServices;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/persons/v1")
+@Tag(name= "People", description= "Endpoints for Managing People")
 public class PersonController {
 	
 	@Autowired
 	private PersonServices services;
 	
 	@GetMapping
+	@Operation(summary = "Finds all people", description = "Finds all people", tags = {"People"}, responses = {
+			@ApiResponse(description = "Sucess", responseCode = "200", content = @Content)
+			})
 	public ResponseEntity<List<PersonVO>> findAll() {
 		List<PersonVO> persons = services.findAll();
 		return new ResponseEntity<>(persons, HttpStatus.OK);
